@@ -20,4 +20,22 @@ export class UserController {
             next(error);
         }
     };
+
+    update = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const user = await this.userService.update(req.params.id, req.body);
+            sendSuccess(res, user, 'Usuario actualizado');
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    delete = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            await this.userService.delete(req.params.id);
+            sendSuccess(res, null, 'Usuario eliminado con éxito');
+        } catch (error) {
+            next(error);
+        }
+    };
 }
