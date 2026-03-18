@@ -56,6 +56,7 @@ export const UserFormModal = ({ isOpen, onClose, user, onSuccess }: UserFormModa
             postalCode: user?.postalCode || '',
             age: user?.age ? String(user.age) : '',
             gender: user?.gender || '',
+            password: '',
         }
     });
 
@@ -73,6 +74,7 @@ export const UserFormModal = ({ isOpen, onClose, user, onSuccess }: UserFormModa
                 postalCode: user?.postalCode || '',
                 age: user?.age ? String(user.age) : '',
                 gender: user?.gender || '',
+                password: '',
             });
         }
     }, [isOpen, user, reset]);
