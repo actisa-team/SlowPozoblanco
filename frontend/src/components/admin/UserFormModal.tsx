@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -60,7 +60,7 @@ export const UserFormModal = ({ isOpen, onClose, user, onSuccess }: UserFormModa
     });
 
     // Reset form when user changes
-    useState(() => {
+    useEffect(() => {
         if (isOpen) {
             reset({
                 firstName: user?.firstName || '',
@@ -75,7 +75,7 @@ export const UserFormModal = ({ isOpen, onClose, user, onSuccess }: UserFormModa
                 gender: user?.gender || '',
             });
         }
-    });
+    }, [isOpen, user, reset]);
 
     const onSubmit = async (data: UserFormData) => {
         try {
