@@ -11,6 +11,11 @@ export interface User {
     email: string;
     firstName: string;
     lastName: string;
+    phone?: string;
+    country?: string;
+    postalCode?: string;
+    age?: number;
+    gender?: string;
     role: UserRole;
     isActive: boolean;
 }

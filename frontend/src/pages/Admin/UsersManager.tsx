@@ -1,9 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../../services/api';
 import type { User } from '../../types/auth.types';
-import { Loader2, Trash2, Edit } from 'lucide-react';
+import { Loader2, Trash2, Edit, Plus } from 'lucide-react';
 import { Button } from '../../components/common/Button';
 import { ROLE_TRANSLATIONS } from '../../constants/translations';
+import { UserFormModal } from '../../components/admin/UserFormModal';
+import { toast } from 'react-hot-toast';
 
 
 interface ApiResponse<T> {
@@ -19,16 +22,54 @@ const UserService = {
 };
 
 export const UsersManager = () => {
+    const queryClient = useQueryClient();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
     const { data: users, isLoading } = useQuery({
         queryKey: ['users'],
         queryFn: UserService.getAll,
     });
 
+    const deleteMutation = useMutation({
+        mutationFn: async (id: string) => {
+            await api.delete(`/users/${id}`);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['users'] });
+            toast.success('Usuario eliminado');
+        },
+        onError: () => {
+            toast.error('Error al eliminar usuario');
+        }
+    });
+
+    const handleDelete = (id: string) => {
+        if (window.confirm('¿Seguro que deseas eliminar este usuario?')) {
+            deleteMutation.mutate(id);
+        }
+    };
+
+    const handleEdit = (user: User) => {
+        setSelectedUser(user);
+        setIsModalOpen(true);
+    };
+
+    const handleCreate = () => {
+        setSelectedUser(null);
+        setIsModalOpen(true);
+    };
+
     if (isLoading) return <div className="flex justify-center p-8"><Loader2 className="animate-spin" /></div>;
 
     return (
         <div className="space-y-6">
-            <h1 className="text-2xl font-bold text-gray-900">Gestión de Usuarios</h1>
+            <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-bold text-gray-900">Gestión de Usuarios</h1>
+                <Button onClick={handleCreate} icon={<Plus className="h-5 w-5" />}>
+                    Crear Usuario
+                </Button>
+            </div>
 
             <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow">
                 <table className="min-w-full divide-y divide-gray-200">
@@ -66,8 +107,8 @@ export const UsersManager = () => {
                                 </td>
                                 <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                                     <div className="flex justify-end gap-2">
-                                        <Button size="sm" variant="secondary" icon={<Edit className="h-4 w-4" />} />
-                                        <Button size="sm" variant="danger" icon={<Trash2 className="h-4 w-4" />} />
+                                        <Button size="sm" variant="secondary" onClick={() => handleEdit(user)} icon={<Edit className="h-4 w-4" />} />
+                                        <Button size="sm" variant="danger" onClick={() => handleDelete(user.id)} icon={<Trash2 className="h-4 w-4" />} />
                                     </div>
                                 </td>
                             </tr>
@@ -75,6 +116,13 @@ export const UsersManager = () => {
                     </tbody>
                 </table>
             </div>
+
+            <UserFormModal 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                user={selectedUser}
+                onSuccess={() => queryClient.invalidateQueries({ queryKey: ['users'] })}
+            />
         </div>
     );
 };

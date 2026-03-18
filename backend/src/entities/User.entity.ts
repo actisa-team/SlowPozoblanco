@@ -18,6 +18,21 @@ export class User {
     @Column()
     lastName!: string;
 
+    @Column({ nullable: true })
+    phone!: string;
+
+    @Column({ nullable: true })
+    country!: string;
+
+    @Column({ nullable: true })
+    postalCode!: string;
+
+    @Column({ type: 'int', nullable: true })
+    age!: number;
+
+    @Column({ nullable: true })
+    gender!: string;
+
     @Column({
         type: 'enum',
         enum: UserRole,
