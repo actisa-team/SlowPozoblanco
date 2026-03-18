@@ -24,7 +24,7 @@ export class AuthService {
     }
 
     async login(data: LoginDto) {
-        const user = await this.userRepository.findOne({ where: { email: data.email }, select: ['id', 'email', 'password', 'role', 'firstName', 'lastName'] });
+        const user = await this.userRepository.findOne({ where: { email: data.email }, select: ['id', 'email', 'password', 'role', 'firstName', 'lastName', 'phone', 'country', 'postalCode', 'age', 'gender'] });
 
         if (!user || !(await bcrypt.compare(data.password, user.password))) {
             throw new Error('Invalid credentials');
