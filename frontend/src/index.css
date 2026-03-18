@@ -1,0 +1,13 @@
+@import "tailwindcss";
+@import "./styles/tokens.css";
+
+@theme {
+  --color-primary: #1e3a8a;
+  --color-primary-light: #60a5fa;
+  --color-primary-dark: #1e40af;
+  --color-secondary: #f3f4f6;
+  --color-background: #ffffff;
+  --color-text-primary: #111827;
+  --color-text-secondary: #6b7280;
+  --color-error: #ef4444;
+}

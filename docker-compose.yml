@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  # Base de Datos con PostGIS
+  db:
+    image: postgis/postgis:15-3.3-alpine
+    container_name: pozoblanco-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Actisa18
+      POSTGRES_DB: pozoblanco_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - pozoblanco-net
+
+  # Memoria Caché
+  cache:
+    image: redis:7-alpine
+    container_name: pozoblanco-redis
+    restart: always
+    command: redis-server --requirepass RedisPass123
+    ports:
+      - "6379:6379"
+    networks:
+      - pozoblanco-net
+
+  # Backend - Dockerfile en /backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: pozoblanco-api
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      API_VERSION: v1
+      # Base de datos
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: Actisa18
+      DB_NAME: pozoblanco_db
+      # Redis
+      REDIS_HOST: cache
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: RedisPass123
+      # JWT
+      JWT_SECRET: YourSuperSecretKeyChangedInProduction
+      JWT_EXPIRES_IN: 15m
+      JWT_REFRESH_SECRET: YourRefreshSecretKeyChangedInProduction
+      JWT_REFRESH_EXPIRES_IN: 7d
+      # CORS
+      CORS_ORIGIN: http://localhost
+    depends_on:
+      - db
+      - cache
+    volumes:
+      - uploads_data:/app/uploads
+    networks:
+      - pozoblanco-net
+
+  # Frontend - Dockerfile en /frontend (Nginx en puerto 80)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:3000/v1
+        VITE_API_VERSION: v1
+        VITE_ENVIRONMENT: production
+        VITE_MAP_TILE_PROVIDER: https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
+        VITE_MAP_ATTRIBUTION: © OpenStreetMap contributors
+        VITE_JWT_STORAGE_KEY: accessToken
+        VITE_REFRESH_TOKEN_KEY: refreshToken
+    container_name: pozoblanco-web
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - pozoblanco-net
+
+networks:
+  pozoblanco-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  uploads_data:

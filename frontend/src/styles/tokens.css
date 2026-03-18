@@ -1,0 +1,14 @@
+:root {
+    /* Totem Specific Colors */
+    --bg-app: #F3F4F6;
+    --surface-totem: #FFFFFF;
+
+    --text-main: #111827;
+    --text-muted: #6B7280;
+
+    --primary-totem: #0F766E;
+    --accent-totem: #F59E0B;
+
+    --danger-totem: #EF4444;
+    --success-totem: #10B981;
+}

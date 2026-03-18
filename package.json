@@ -1,0 +1,14 @@
+{
+    "name": "slow-pozoblanco-root",
+    "private": true,
+    "scripts": {
+        "docs": "npm run docs:build",
+        "docs:build": "npm run docs:build:backend && npm run docs:build:frontend",
+        "docs:build:backend": "cd backend && npm run docs:build",
+        "docs:build:frontend": "cd frontend && npm run docs:build",
+        "docs:check": "node scripts/check-docs.js"
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    }
+}

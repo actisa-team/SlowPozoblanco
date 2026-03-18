@@ -1,0 +1,9 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "entryPoints": [
+        "./src/components/**/*.tsx",
+        "./src/hooks/**/*.ts"
+    ],
+    "out": "docs/typedoc",
+    "name": "Slow Pozoblanco Frontend"
+}

@@ -1,0 +1,188 @@
+openapi: 3.1.0
+info:
+  title: Slow Pozoblanco API
+  description: API para la gestión turística y cartelería digital de Slow Pozoblanco.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Servidor de Desarrollo
+tags:
+  - name: Auth
+    description: Autenticación de usuarios
+  - name: Users
+    description: Gestión de usuarios
+  - name: Signs
+    description: Cartelería Digital
+  - name: Tourism
+    description: Recursos Turísticos
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Mensaje de error descriptivo
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: usuario1
+        email:
+          type: string
+          example: usuario@email.com
+        role:
+          type: string
+          enum: [ADMIN, USER, ROBOT]
+          example: USER
+    LoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        user:
+          $ref: '#/components/schemas/User'
+
+paths:
+  /auth/login:
+    post:
+      summary: Iniciar sesión
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Inicio de sesión exitoso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Credenciales inválidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/register:
+    post:
+      summary: Registrar nuevo usuario
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, password, email]
+              properties:
+                username: { type: string }
+                password: { type: string }
+                email: { type: string, format: email }
+      responses:
+        '201':
+          description: Usuario creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  
+  /users:
+    get:
+      summary: Listar usuarios
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '403':
+          description: No autorizado (requiere ADMIN)
+
+  /digital-signs:
+    get:
+      summary: Listar carteles digitales
+      tags: [Signs]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de carteles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: integer }
+                    name: { type: string }
+                    status: { type: string, enum: [ONLINE, OFFLINE] }
+  
+  /tourism-resources:
+    get:
+      summary: Listar recursos turísticos
+      tags: [Tourism]
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: lat
+          schema:
+            type: number
+            format: float
+          description: Latitud para búsqueda por cercanía
+        - in: query
+          name: lng
+          schema:
+            type: number
+            format: float
+          description: Longitud para búsqueda por cercanía
+      responses:
+        '200':
+          description: Lista paginada de recursos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: 
+                    type: array
+                    items: { type: object, properties: { id: { type: integer }, name: { type: string } } }
+                  meta: { type: object, properties: { total: { type: integer } } }
