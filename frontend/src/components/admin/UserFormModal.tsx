@@ -21,7 +21,7 @@ const userSchema = z.object({
     phone: z.string().optional(),
     country: z.string().optional(),
     postalCode: z.string().optional(),
-    age: z.string().optional(),
+    age: z.string().refine(val => !val || parseInt(val, 10) >= 0, { message: 'La edad no puede ser negativa' }).optional(),
     gender: z.string().optional(),
 });
 
@@ -140,7 +140,7 @@ export const UserFormModal = ({ isOpen, onClose, user, onSuccess }: UserFormModa
 
                 <div className="grid grid-cols-3 gap-4">
                     <Input label="C. Postal" {...register('postalCode')} error={errors.postalCode} />
-                    <Input label="Edad" type="number" {...register('age')} error={errors.age} />
+                    <Input label="Edad" type="number" min="0" {...register('age')} error={errors.age} />
                     <div className="flex flex-col gap-1">
                         <label className="text-sm font-medium text-gray-700">Sexo</label>
                         <select {...register('gender')} className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">

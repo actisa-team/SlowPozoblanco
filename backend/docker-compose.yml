@@ -10,11 +10,14 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
+      - UPLOAD_DIR=/app/uploads
       - DB_HOST=postgres
       - DB_USER=pozoblanco
       - DB_PASSWORD=SecurePassword123!
       - DB_NAME=pozoblanco_db
       - REDIS_HOST=redis
+    volumes:
+      - ../uploads:/app/uploads
     depends_on:
       - postgres
       - redis

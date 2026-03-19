@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import { env } from './config/environment';
 import { errorMiddleware } from './middlewares/errorHandler';
 import routes from './routes';
+import path from 'path';
 
 const app = express();
 
@@ -23,12 +24,14 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Static Files - Serve uploaded media
-app.use('/uploads', express.static('uploads'));
+const uploadDir = process.env.UPLOAD_DIR 
+    ? process.env.UPLOAD_DIR
+    : path.join(__dirname, '../../uploads');
+app.use('/uploads', express.static(uploadDir));
 
 // Routes
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
-import path from 'path';
 
 const swaggerDocument = YAML.load(path.join(__dirname, '../docs/openapi.yaml'));
 

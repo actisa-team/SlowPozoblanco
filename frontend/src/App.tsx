@@ -63,7 +63,7 @@ function App() {
           </Route>
 
           {/* Totem Route - Isolated */}
-          <Route path="/totem" element={<TotemPage />} />
+          <Route path="/totem/:id" element={<TotemPage />} />
 
           {/* Catch all */}
           <Route path="*" element={<Navigate to="/" replace />} />

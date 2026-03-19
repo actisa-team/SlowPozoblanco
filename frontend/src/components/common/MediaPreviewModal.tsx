@@ -20,10 +20,10 @@ export const MediaPreviewModal = ({ isOpen, onClose, url, type, filename }: Medi
             isOpen={isOpen}
             onClose={onClose}
             title={filename}
-            maxWidth="2xl"
+            maxWidth="full"
         >
             <div className="flex flex-col h-full bg-black/5 rounded-lg overflow-hidden">
-                <div className="flex-1 flex items-center justify-center p-4 min-h-[500px] max-h-[80vh]">
+                <div className="flex-1 flex items-center justify-center p-4 min-h-[75vh] max-h-[85vh]">
                     {is360 ? (
                         <MediaViewer360 url={url} type={type as 'image360' | 'video360'} />
                     ) : type === 'image' ? (

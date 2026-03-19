@@ -3,7 +3,9 @@ import path from 'path';
 import fs from 'fs';
 import { Request } from 'express';
 
-const UPLOAD_BASE_DIR = 'uploads/tourism-resources';
+const UPLOAD_BASE_DIR = process.env.UPLOAD_DIR 
+    ? path.join(process.env.UPLOAD_DIR, 'tourism-resources')
+    : path.join(__dirname, '../../uploads/tourism-resources');
 
 // Límites de archivos
 const FILE_LIMITS = {

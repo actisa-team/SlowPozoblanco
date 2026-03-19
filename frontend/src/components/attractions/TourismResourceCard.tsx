@@ -53,7 +53,7 @@ export const TourismResourceCard = ({ tourismResource }: TourismResourceCardProp
                 </p>
 
                 <div className="mt-4 pt-4 border-t border-gray-50 flex items-center justify-between">
-                    <Link to={`/tourism-resources/${tourismResource.id}`} className="w-full">
+                    <Link to={`/totem/${tourismResource.id}`} className="w-full">
                         <Button variant="outline" size="sm" fullWidth icon={<Info className="h-4 w-4" />}>
                             Ver Detalles
                         </Button>

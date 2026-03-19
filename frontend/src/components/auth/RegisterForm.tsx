@@ -16,7 +16,7 @@ const registerSchema = z.object({
     phone: z.string().optional(),
     country: z.string().optional(),
     postalCode: z.string().optional(),
-    age: z.string().optional(), // captured as string, transformed before submit
+    age: z.string().refine(val => !val || parseInt(val, 10) >= 0, { message: 'La edad no puede ser negativa' }).optional(), // captured as string, transformed before submit
     gender: z.string().optional(),
 });
 
@@ -103,6 +103,7 @@ export const RegisterForm = () => {
                 <Input
                     label="Edad (Opcional)"
                     type="number"
+                    min="0"
                     {...register('age')}
                     error={errors.age}
                 />

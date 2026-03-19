@@ -54,7 +54,7 @@ export const LeafletMap = ({
         <MapContainer
             center={center}
             zoom={zoom}
-            scrollWheelZoom={false}
+            scrollWheelZoom={true}
             className={className}
         >
             <TileLayer
@@ -73,7 +73,7 @@ export const LeafletMap = ({
                             <h3 className="font-bold text-sm mb-1">{resource.name}</h3>
                             <p className="text-xs text-gray-600 mb-2">{resource.category}</p>
                             <Link
-                                to={`/tourism-resources/${resource.id}`}
+                                to={`/totem/${resource.id}`}
                                 className="text-xs text-primary hover:underline font-medium"
                             >
                                 Ver detalles

@@ -43,7 +43,6 @@ export const MediaViewer360: React.FC<MediaViewer360Props> = ({ url, type }) => 
                 navbar: [
                     'zoom',
                     'move',
-                    'download',
                     'fullscreen',
                     'caption',
                 ],
@@ -93,5 +92,5 @@ export const MediaViewer360: React.FC<MediaViewer360Props> = ({ url, type }) => 
         };
     }, [url, type]);
 
-    return <div ref={viewerRef} style={{ width: '100%', height: '600px' }} className="w-full h-full" />;
+    return <div ref={viewerRef} style={{ width: '100%', height: '75vh' }} className="w-full" />;
 };

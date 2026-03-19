@@ -44,9 +44,14 @@ export class TourismResourceController {
      */
     create = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            console.log('REACHED BACKEND CREATE:', req.body);
             const result = await this.service.create(req.body);
+            console.log('CREATED RESOURCE SUCCESSFULLY:', result);
             sendCreated(res, result);
-        } catch (error) { next(error); }
+        } catch (error) { 
+            console.error('ERROR IN CREATE:', error);
+            next(error); 
+        }
     };
 
     /**
