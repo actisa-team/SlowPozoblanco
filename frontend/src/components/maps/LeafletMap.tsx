@@ -1,20 +1,51 @@
 import { useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Icon } from 'leaflet';
+import L from 'leaflet';
 import type { TourismResource } from '../../types/tourismResources.types';
 import { Link } from 'react-router-dom';
+import { renderToString } from 'react-dom/server';
+import { Landmark, Palette, TreePine, UtensilsCrossed, Bed, MapPin } from 'lucide-react';
+import { getCategoryTranslation } from '../../constants/translations';
 
-// Fix for default Leaflet markers not showing
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+// Custom Map Marker Logic
+const getCategoryIconConfig = (category: string) => {
+    switch (category) {
+        case 'MONUMENT':
+            return { icon: <Landmark size={20} color="white" />, outerClass: 'bg-purple-600', pointerClass: 'border-t-purple-600' };
+        case 'MUSEUM':
+            return { icon: <Palette size={20} color="white" />, outerClass: 'bg-blue-600', pointerClass: 'border-t-blue-600' };
+        case 'PARK':
+            return { icon: <TreePine size={20} color="white" />, outerClass: 'bg-green-600', pointerClass: 'border-t-green-600' };
+        case 'RESTAURANT':
+            return { icon: <UtensilsCrossed size={20} color="white" />, outerClass: 'bg-orange-600', pointerClass: 'border-t-orange-600' };
+        case 'HOTEL':
+            return { icon: <Bed size={20} color="white" />, outerClass: 'bg-cyan-600', pointerClass: 'border-t-cyan-600' };
+        case 'OTHER':
+        default:
+            return { icon: <MapPin size={20} color="white" />, outerClass: 'bg-gray-700', pointerClass: 'border-t-gray-700' };
+    }
+};
 
-const DefaultIcon = new Icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41]
-});
+const createCustomIcon = (category: string) => {
+    const config = getCategoryIconConfig(category);
+    const iconHtml = renderToString(config.icon);
+    
+    return L.divIcon({
+        className: 'custom-div-icon',
+        html: `
+            <div class="flex flex-col items-center">
+                <div class="${config.outerClass} w-10 h-10 rounded-full flex items-center justify-center shadow-lg border-2 border-white transform transition-transform hover:scale-110 relative z-10">
+                    ${iconHtml}
+                </div>
+                <div class="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] border-l-transparent border-r-transparent ${config.pointerClass} -mt-[2px] drop-shadow-md relative z-0"></div>
+            </div>
+        `,
+        iconSize: [40, 48],
+        iconAnchor: [20, 48],
+        popupAnchor: [0, -48]
+    });
+};
 
 /**
  * Propiedades del componente LeafletMap.
@@ -66,12 +97,12 @@ export const LeafletMap = ({
                 <Marker
                     key={resource.id}
                     position={[resource.latitude, resource.longitude]}
-                    icon={DefaultIcon}
+                    icon={createCustomIcon(resource.category)}
                 >
                     <Popup>
                         <div className="p-1">
                             <h3 className="font-bold text-sm mb-1">{resource.name}</h3>
-                            <p className="text-xs text-gray-600 mb-2">{resource.category}</p>
+                            <p className="text-xs text-gray-600 mb-2 font-medium">{getCategoryTranslation(resource.category)}</p>
                             <Link
                                 to={`/totem/${resource.id}`}
                                 className="text-xs text-primary hover:underline font-medium"
