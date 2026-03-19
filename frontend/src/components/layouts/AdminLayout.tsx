@@ -23,6 +23,7 @@ export const AdminLayout = () => {
         { name: 'Recursos Turísticos', href: '/admin/tourism-resources', icon: MapPin },
         // { name: 'Señalización', href: '/admin/signage', icon: Monitor },
         // { name: 'Cartelera', href: '/admin/digital-signs', icon: Tv },
+        { name: 'CMS', href: 'https://pozoblanco.signcdn.com', icon: Monitor },
         { name: 'Usuarios', href: '/admin/users', icon: Users, adminOnly: true },
         { name: 'Configuración', href: '/admin/settings', icon: Settings, adminOnly: true },
     ];
@@ -47,6 +48,26 @@ export const AdminLayout = () => {
                     <nav className="space-y-1">
                         {filteredNavigation.map((item) => {
                             const isActive = location.pathname === item.href;
+                            const isExternal = item.href.startsWith('http');
+
+                            if (isExternal) {
+                                return (
+                                    <a
+                                        key={item.name}
+                                        href={item.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={clsx(
+                                            'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                                            'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                                        )}
+                                    >
+                                        <item.icon className="h-5 w-5" />
+                                        {item.name}
+                                    </a>
+                                );
+                            }
+
                             return (
                                 <Link
                                     key={item.name}
