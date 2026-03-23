@@ -48,9 +48,9 @@ export class EmailService {
         try {
             const info = await this.transporter.sendMail(mailOptions);
             console.log('Message sent: %s', info.messageId);
-        } catch (error) {
-            console.error('Error sending email:', error);
-            throw new Error('No se pudo enviar el correo de recuperación');
+        } catch (error: any) {
+            console.error('Error sending email exact:', error.message);
+            throw new Error(`Detalle técnico: ${error.message || 'Desconocido'}`);
         }
     }
 }
