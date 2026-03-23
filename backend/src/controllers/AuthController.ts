@@ -47,11 +47,10 @@ export class AuthController {
             if (!email) {
                 return res.status(400).json({ success: false, message: 'Email es requerido' });
             }
-            await this.authService.forgotPassword(email);
-            // Siempre enviamos éxito para no revelar si el email existe o no
-            sendSuccess(res, null, 'Si existe una cuenta con ese correo, recibirás un enlace de recuperación');
-        } catch (error) {
-            next(error);
+            const msg = await this.authService.forgotPassword(email);
+            return res.status(200).json({ success: true, message: msg });
+        } catch (error: any) {
+            return res.status(400).json({ success: false, message: error.message || 'Error del servidor' });
         }
     };
 

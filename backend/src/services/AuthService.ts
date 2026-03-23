@@ -53,13 +53,12 @@ export class AuthService {
         return { user: userWithoutPassword, token, refreshToken };
     }
 
-    async forgotPassword(email: string): Promise<void> {
+    async forgotPassword(email: string): Promise<string> {
         console.log('>>> [DEBUG] Buscando usuario:', email);
         const user = await this.userRepository.findOne({ where: { email } });
         if (!user) {
-            console.log('>>> [DEBUG] Usuario NO ENCONTRADO en la BBDD, terminando en silencio por seguridad');
-            // No revelamos si el usuario existe o no, simplemente volvemos
-            return;
+            console.log('>>> [DEBUG] Usuario NO ENCONTRADO en la BBDD, lanzando error explícito');
+            throw new Error('El correo ingresado no pertenece a ningún usuario registrado.');
         }
 
         console.log('>>> [DEBUG] Usuario encontrado. Generando Token segurizado...');
@@ -81,8 +80,14 @@ export class AuthService {
             : 'http://localhost');
         const resetUrl = `${frontendUrl}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`;
 
-        // Enviar email
-        await this.emailService.sendPasswordResetEmail(user.email, resetUrl);
+        // Enviar email con comprobación de errores
+        try {
+            await this.emailService.sendPasswordResetEmail(user.email, resetUrl);
+            return 'Correo de recuperación enviado con éxito.';
+        } catch (err: any) {
+            console.error('>>> [DEBUG] SEND MAIL ERROR:', err);
+            throw new Error(`Fallo interno al enviar el correo: ${err.message || 'Error SMTP'}`);
+        }
     }
 
     async resetPassword(email: string, token: string, newPassword: string): Promise<void> {

@@ -32,13 +32,14 @@ export const ForgotPasswordModal = ({ isOpen, onClose }: ForgotPasswordModalProp
 
     const mutation = useMutation({
         mutationFn: AuthService.forgotPassword,
-        onSuccess: () => {
-            toast.success('Si existe una cuenta con ese correo, recibirás un enlace de recuperación', { duration: 5000 });
+        onSuccess: (message: string | void) => {
+            toast.success(typeof message === 'string' ? message : 'Enviado correctamente', { duration: 5000 });
             reset();
             onClose();
         },
-        onError: () => {
-            toast.error('Ocurrió un error al solicitar la recuperación');
+        onError: (error: any) => {
+            const errorMsg = error?.response?.data?.message || error.message || 'Ocurrió un error general';
+            toast.error(errorMsg);
         },
     });
 

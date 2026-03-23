@@ -64,44 +64,46 @@ export const LoginForm = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <Input
-                label="Email"
-                type="email"
-                placeholder="admin@pozoblanco.es"
-                error={errors.email}
-                {...register('email')}
-            />
-            <Input
-                label="Contraseña"
-                type="password"
-                placeholder="********"
-                error={errors.password}
-                {...register('password')}
-            />
+        <>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <Input
+                    label="Email"
+                    type="email"
+                    placeholder="admin@pozoblanco.es"
+                    error={errors.email}
+                    {...register('email')}
+                />
+                <Input
+                    label="Contraseña"
+                    type="password"
+                    placeholder="********"
+                    error={errors.password}
+                    {...register('password')}
+                />
 
-            <div className="flex justify-end">
-                <button
-                    type="button"
-                    onClick={() => setIsForgotModalOpen(true)}
-                    className="text-sm font-medium text-primary hover:text-blue-700 transition-colors"
+                <div className="flex justify-end">
+                    <button
+                        type="button"
+                        onClick={() => setIsForgotModalOpen(true)}
+                        className="text-sm font-medium text-primary hover:text-blue-700 transition-colors"
+                    >
+                        ¿Has olvidado tu contraseña?
+                    </button>
+                </div>
+
+                <Button
+                    type="submit"
+                    fullWidth
+                    loading={mutation.isPending}
                 >
-                    ¿Has olvidado tu contraseña?
-                </button>
-            </div>
-
-            <Button
-                type="submit"
-                fullWidth
-                loading={mutation.isPending}
-            >
-                Iniciar Sesión
-            </Button>
+                    Iniciar Sesión
+                </Button>
+            </form>
 
             <ForgotPasswordModal 
                 isOpen={isForgotModalOpen} 
                 onClose={() => setIsForgotModalOpen(false)} 
             />
-        </form>
+        </>
     );
 };
