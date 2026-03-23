@@ -9,6 +9,8 @@ import { Input } from '../common/Input';
 import { Button } from '../common/Button';
 import { AuthService } from '../../services/auth.service';
 import { useAuthStore } from '../../stores/authStore';
+import { ForgotPasswordModal } from './ForgotPasswordModal';
+import { useState } from 'react';
 
 const loginSchema = z.object({
     email: z.string().email('Email inválido'),
@@ -28,6 +30,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 export const LoginForm = () => {
     const navigate = useNavigate();
     const loginStore = useAuthStore((state) => state.login);
+    const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
 
     const {
         register,
@@ -77,6 +80,16 @@ export const LoginForm = () => {
                 {...register('password')}
             />
 
+            <div className="flex justify-end">
+                <button
+                    type="button"
+                    onClick={() => setIsForgotModalOpen(true)}
+                    className="text-sm font-medium text-primary hover:text-blue-700 transition-colors"
+                >
+                    ¿Has olvidado tu contraseña?
+                </button>
+            </div>
+
             <Button
                 type="submit"
                 fullWidth
@@ -84,6 +97,11 @@ export const LoginForm = () => {
             >
                 Iniciar Sesión
             </Button>
+
+            <ForgotPasswordModal 
+                isOpen={isForgotModalOpen} 
+                onClose={() => setIsForgotModalOpen(false)} 
+            />
         </form>
     );
 };

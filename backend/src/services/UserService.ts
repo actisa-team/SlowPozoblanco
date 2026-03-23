@@ -19,6 +19,8 @@ export class UserService {
 
         if (data.password) {
             data.password = await bcrypt.hash(data.password, env.security.bcryptRounds);
+        } else {
+            delete data.password;
         }
 
         Object.assign(user, data);

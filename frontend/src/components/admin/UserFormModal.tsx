@@ -82,11 +82,12 @@ export const UserFormModal = ({ isOpen, onClose, user, onSuccess }: UserFormModa
     const onSubmit = async (data: UserFormData) => {
         try {
             setIsLoading(true);
+            const { password, ...restData } = data;
             const payload = {
-                ...data,
+                ...restData,
                 age: data.age ? parseInt(data.age, 10) : undefined,
                 // Only send password if creating or if provided during edit
-                ...(data.password ? { password: data.password } : {}),
+                ...(password ? { password } : {}),
             };
 
             // Requirement: Password is required for creation

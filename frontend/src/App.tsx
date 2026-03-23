@@ -11,6 +11,7 @@ import { AdminLayout } from './components/layouts/AdminLayout';
 import { LoginForm } from './components/auth/LoginForm';
 import { RegisterForm } from './components/auth/RegisterForm';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { ResetPasswordPage } from './pages/ResetPasswordPage';
 
 // Public Pages
 import { TourismResources } from './pages/TourismResources';
@@ -48,6 +49,7 @@ function App() {
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<LoginForm />} />
             <Route path="/register" element={<RegisterForm />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
           </Route>
 
           {/* Admin Routes with Sidebar Layout */}

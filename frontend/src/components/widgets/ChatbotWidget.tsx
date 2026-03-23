@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card } from '../ui/Card';
 import { MessageCircle } from 'lucide-react';
+import chatbotImg from '../../assets/chatbot.png';
 
 export const ChatbotWidget = () => {
     return (
@@ -17,10 +18,10 @@ export const ChatbotWidget = () => {
 
                 <div className="flex-1 flex items-center justify-center">
                     <div className="text-center p-4">
-                        <div className="w-16 h-16 bg-surface-totem rounded-full shadow-sm mx-auto mb-3 flex items-center justify-center text-3xl animate-pulse">
-                            👋
+                        <div className="w-24 h-24 mx-auto mb-3 flex items-center justify-center animate-[pulse_3s_ease-in-out_infinite] transition-transform hover:scale-110 cursor-pointer">
+                            <img src={chatbotImg} alt="Gallo Asistente" className="w-full h-full object-contain drop-shadow-lg" />
                         </div>
-                        <p className="text-sm text-muted">¿Necesitas ayuda? Toca aquí.</p>
+                        <p className="text-sm text-muted font-medium">¿Necesitas ayuda? Toca aquí.</p>
                     </div>
                 </div>
             </div>

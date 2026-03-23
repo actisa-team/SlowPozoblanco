@@ -23,6 +23,14 @@ export const AuthService = {
         // await api.post('/auth/logout');
     },
 
+    async forgotPassword(data: { email: string }): Promise<void> {
+        await api.post('/auth/forgot-password', data);
+    },
+
+    async resetPassword(data: { email: string, token: string, newPassword: string }): Promise<void> {
+        await api.post('/auth/reset-password', data);
+    },
+
     async getProfile(): Promise<User> {
         // Assuming there is a /auth/me or similar, or just relying on stored user
         // For now, return stored user or fetch if needed

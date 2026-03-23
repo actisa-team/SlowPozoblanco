@@ -32,8 +32,8 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
                 className={`w-full ${maxWidthClasses[maxWidth]} animate-in zoom-in-95 duration-200`}
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="relative bg-white rounded-lg shadow-xl">
-                    <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                <div className="relative bg-white rounded-lg shadow-xl flex flex-col max-h-[calc(100vh-4rem)]">
+                    <div className="flex items-center justify-between p-6 border-b border-gray-200 shrink-0">
                         <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
                         <button
                             onClick={onClose}
@@ -43,7 +43,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
                         </button>
                     </div>
 
-                    <div className="p-6">
+                    <div className="p-6 overflow-y-auto">
                         {children}
                     </div>
                 </div>

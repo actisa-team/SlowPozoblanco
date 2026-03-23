@@ -9,12 +9,13 @@ import { ParkingWidget } from '../components/widgets/ParkingWidget';
 import { ChatbotWidget } from '../components/widgets/ChatbotWidget';
 import { AudioguideWidget } from '../components/widgets/AudioguideWidget';
 import { Ticker } from '../components/layout/Ticker';
-import { ChevronLeft, ChevronRight, Loader2, Maximize2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Loader2, Maximize2, Info } from 'lucide-react';
 import { MediaPreviewModal } from '../components/common/MediaPreviewModal';
 
 export const TotemPage = () => {
     const { id } = useParams<{ id: string }>();
     const [activeModal, setActiveModal] = useState<string | null>(null);
+    const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [previewMedia, setPreviewMedia] = useState<{ url: string, type: string } | null>(null);
 
@@ -92,13 +93,22 @@ export const TotemPage = () => {
             <div className="flex flex-col lg:grid lg:grid-cols-12 h-max lg:h-full gap-4 lg:p-6 p-4 box-border lg:portrait:grid-rows-12 lg:landscape:grid-rows-[auto_auto_1fr_auto_auto]">
 
                 {/* --- A. Header (Row 1) - CENTRADO --- */}
-                <header className="col-span-12 lg:portrait:row-span-1 lg:landscape:row-start-1 flex flex-col items-center justify-center text-center mt-4 lg:mt-0 lg:h-full">
+                <header className="col-span-12 lg:portrait:row-span-1 lg:landscape:row-start-1 flex flex-col items-center justify-center text-center mt-4 lg:mt-0 lg:h-full bg-[#cde1ff] rounded-3xl border border-blue-200 shadow-sm p-4 lg:p-6 mb-2 lg:mb-0 relative group">
                     <h1 className="text-2xl lg:text-4xl font-bold tracking-tight text-main uppercase">
                         {resource?.name || 'Cargando...'}
                     </h1>
-                    <p className="text-muted text-sm lg:text-lg font-light lg:line-clamp-2 mt-2 lg:mt-0 max-w-4xl px-4 text-balance">
-                        {resource?.description || 'Recurso Turístico'}
-                    </p>
+                    <div className="relative mt-2 lg:mt-0 max-w-4xl px-4">
+                        <p className="text-muted text-sm lg:text-lg font-light lg:line-clamp-2 text-balance pr-8">
+                            {resource?.description || 'Recurso Turístico'}
+                        </p>
+                        <button 
+                            className="absolute right-0 top-1/2 -translate-y-1/2 p-1.5 text-blue-600 bg-blue-100 hover:bg-blue-200 rounded-full transition-colors cursor-pointer"
+                            onClick={() => setIsDescriptionOpen(true)}
+                            title="Ver descripción completa"
+                        >
+                            <Info className="w-5 h-5" />
+                        </button>
+                    </div>
                 </header>
 
                 {/* --- B. Hero Section (Row 3-8) - TODO EL ANCHO --- */}
@@ -224,6 +234,19 @@ export const TotemPage = () => {
                 onClose={() => setActiveModal(null)}
                 title={activeModal || ''}
             />
+
+            <Modal
+                isOpen={isDescriptionOpen}
+                onClose={() => setIsDescriptionOpen(false)}
+                title="Descripción detallada"
+                maxWidth="2xl"
+            >
+                <div className="prose prose-blue max-w-none">
+                    <p className="text-gray-700 whitespace-pre-wrap leading-relaxed text-lg">
+                        {resource?.description || 'Sin descripción disponible.'}
+                    </p>
+                </div>
+            </Modal>
 
             {previewMedia && (
                 <MediaPreviewModal

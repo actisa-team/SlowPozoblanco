@@ -36,4 +36,37 @@ export class AuthController {
             next(error);
         }
     };
+
+    /**
+     * Solicita la recuperación de contraseña enviando un enlace al correo.
+     */
+    forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { email } = req.body;
+            if (!email) {
+                return res.status(400).json({ success: false, message: 'Email es requerido' });
+            }
+            await this.authService.forgotPassword(email);
+            // Siempre enviamos éxito para no revelar si el email existe o no
+            sendSuccess(res, null, 'Si existe una cuenta con ese correo, recibirás un enlace de recuperación');
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    /**
+     * Restablece la contraseña usando el token.
+     */
+    resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { email, token, newPassword } = req.body;
+            if (!email || !token || !newPassword) {
+                return res.status(400).json({ success: false, message: 'Faltan parámetros requeridos' });
+            }
+            await this.authService.resetPassword(email, token, newPassword);
+            sendSuccess(res, null, 'Contraseña actualizada correctamente');
+        } catch (error) {
+            next(error);
+        }
+    };
 }
