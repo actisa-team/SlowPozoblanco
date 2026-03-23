@@ -54,12 +54,15 @@ export class AuthService {
     }
 
     async forgotPassword(email: string): Promise<void> {
+        console.log('>>> [DEBUG] Buscando usuario:', email);
         const user = await this.userRepository.findOne({ where: { email } });
         if (!user) {
+            console.log('>>> [DEBUG] Usuario NO ENCONTRADO en la BBDD, terminando en silencio por seguridad');
             // No revelamos si el usuario existe o no, simplemente volvemos
             return;
         }
 
+        console.log('>>> [DEBUG] Usuario encontrado. Generando Token segurizado...');
         // Generar token seguro
         const resetToken = crypto.randomBytes(32).toString('hex');
         
@@ -73,9 +76,9 @@ export class AuthService {
         await this.userRepository.save(user);
 
         // Generar URL para frontend
-        const frontendUrl = env.isProd 
-            ? 'https://pozoblanco.es' // Reemplazar con URL real en prod
-            : 'http://localhost:5173';
+        const frontendUrl = process.env.FRONTEND_URL || (env.isProd 
+            ? 'https://slowpozoblanco-production.up.railway.app' // Reemplazar con URL real en prod
+            : 'http://localhost');
         const resetUrl = `${frontendUrl}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`;
 
         // Enviar email

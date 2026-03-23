@@ -42,6 +42,7 @@ export class AuthController {
      */
     forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            console.log('>>> [DEBUG] Recibida petición forgotPassword para:', req.body.email);
             const { email } = req.body;
             if (!email) {
                 return res.status(400).json({ success: false, message: 'Email es requerido' });
